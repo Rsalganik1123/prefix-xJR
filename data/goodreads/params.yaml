@@ -1,0 +1,25 @@
+dataset:
+  name: goodreads
+  ratings_file_path: data/goodreads/goodreads_sample.csv
+  rec_set_path: data/goodreads/full_recset.csv
+  item_group_file_path: data/goodreads/item_groups.pkl
+  user_group_file_path: data/goodreads/user_groups.pkl
+  format:
+    sep: ","
+    engine: python
+    columns:
+      user_column: user_id
+      item_column: book_id
+      rating_column: rating
+    names:
+      - user_id
+      - book_id
+      - is_read
+      - rating
+      - is_reviewed
+  keys:
+    user_key: user_id
+    item_key: book_id
+    rating_key: rating
+    est_rating_key: Estimated_Rating
+  

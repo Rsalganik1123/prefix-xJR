@@ -1,0 +1,25 @@
+dataset:
+  name: ml-1m
+  ratings_file_path: data/ml-1m/ratings.dat
+  rec_set_path: data/ml-1m/full_recset.csv
+  item_group_file_path: data/ml-1m/item_groups.pkl
+  user_group_file_path: data/ml-1m/user_groups.pkl
+  format:
+    sep: "::"
+    engine: python
+    columns:
+      user_column: user
+      item_column: item
+      rating_column: rating
+      timestamp_column: timestamp
+    names:
+      - user
+      - item
+      - rating
+      - timestamp
+  keys:
+    user_key: User_ID
+    item_key: Movie_ID
+    rating_key: rating
+    est_rating_key: Estimated_Rating
+    timestamp_key: timestamp
