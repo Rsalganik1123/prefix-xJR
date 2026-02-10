@@ -145,19 +145,8 @@ def format_sampled_rankings_kt(df, data_cfg):
         user_items[str(uid)] = []
         for _, row in items.iterrows():
             user_items[str(uid)].extend(row['Ranked_Items'])
-            # iid = row[item_key]
-            # score = row[est_rating_key]
-            # user_items[str(uid)].append((str(iid), score))
-    print(user_items)
-    # # Sort and strip scores to get pure ranked lists
-    # user_rankings = {}
-    # for uid, items in user_items.items():
-    #     # Sort desc by score
-    #     items.sort(key=lambda x: x[1], reverse=True)
-    #     # Keep only item IDs
-    #     user_rankings[uid] = [iid for iid, score in items]
-    #     # if uid == '5412': print(len(user_rankings[uid]))
-        
+    # print(user_items)
+    
     print(f"Loaded {len(user_items)} user lists.")
     
     return user_items

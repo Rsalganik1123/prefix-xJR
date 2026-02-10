@@ -21,18 +21,8 @@ def calculate_pop_group_item_diversity(full_committee, item_groups, k, dataset_c
     Computes, per popularity bin/group:
       - coverage[group]   = (# of items from group that appear in top-k) / (total # distinct committee items in that group)
       - percentage[group] = (# of items from group that appear in top-k) / k
-
-    Args:
-        full_committee: list of item ids in ranked order (best -> worst)
-        item_groups: DataFrame with columns [item_key, bin_col] (at least)
-        k: cutoff
-        dataset_cfg: config containing dataset keys
-        bin_col: grouping column name (default: "binned")
-
-    Returns:
-        coverage_results: dict[group -> float]
-        percentage_results: dict[group -> float]
     """
+    
     item_key = dataset_cfg["dataset"]["keys"]["item_key"]
 
     committee_at_k = list(full_committee[:k])

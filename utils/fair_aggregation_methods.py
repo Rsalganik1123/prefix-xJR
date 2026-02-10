@@ -6,13 +6,16 @@ import time
 from collections import deque
 import ipdb 
 
+
+"""
+The following code is borrowed and slightly modified for our dataset format. For the original version, please see: https://github.com/Aussiroth/Improved-Fair-Rank-Aggregation/tree/main
+"""
+
 class FairnessConstraintsInfeasible(Exception):
     pass
 
 class ILPInfeasible(Exception):
     pass
-
-# TOPK = 10
 
 def Kendall_Tau_Dist(first, second):
     mappedrank = []
@@ -622,85 +625,3 @@ def Closest_Fair_Ranking(rank, id_attribute, num_attributes, TOPK):
     fair_rank += rear_part
     return fair_rank
 
-
-
-    
-
-
-
-
-
-def test(): 
-    alphas = [0.6, 0.2, 0.1]
-    betas = [1, 1, 1]
-    
-    rankings = [[0, 1, 2, 3, 4, 5], [2, 0, 1, 3, 5, 4], [1, 0, 5, 4, 2, 3]]
-    attributes_map = {0: 0, 1:0, 2:2, 3:1, 4: 2, 5: 1}
-    num_attributes = 3
-    ipdb.set_trace() 
-    print("Optimal Fair:")
-    FairILP(alphas, betas, rankings, attributes_map, num_attributes)
-    print("------------------------")
-    print("Our algorithm + ILP:")
-    Consensus(alphas, betas, rankings, attributes_map, num_attributes)
-    print("------------------------")
-
-    return 0 
-
-# test() 
-
-
-####
-#Setup to run algorithms here
-
-#The code expects that the input rankings are over the elements 0 ... d-1.
-#If it is not 0 indexed, it will give an error.
-
-#This shows an example of how to run the algorithm on one of the input datasets.
-# alphas = [0.6, 0.4]
-# betas = [1, 1]
-# TOPK = 30
-
-
-#alphas, betas are arrays which indicate the alpha_i and beta_i values for each group, starting with 1 (at index 0 of the list)
-# alphas = [0.7, 0.2]
-# betas = [1, 1]
-# TOPK = 4
-
-# rankings = [[5, 2, 7, 0, 1, 3, 6, 4],[0, 2, 3, 4, 7, 6, 1, 5],[0, 1, 4, 6, 7, 2, 5, 3]]
-# attributes_map = {0: 0, 1: 0, 2: 0, 3: 0, 4: 1, 5: 1, 6: 1, 7: 1}
-# num_attributes = 2
-
-
-
-
-# #Toy Example 
-# alphas = [0.1, 0.8]
-# betas = [1, 1]
-# TOPK = 3
-# CUTOFFN = 25
-# CUTOFFD = 100
-# rankings = [[0, 1, 2, 3, 4, 5], [2, 0, 1, 3, 5, 4], [1, 0, 5, 4, 2, 3]]
-# attributes_map = {0: 0, 1:0, 2:1, 3:1, 4: 1, 5: 1}
-# num_attributes = 2
-# rng = np.random.default_rng([9, TOPK, CUTOFFN, len(rankings[0]), int(seed_val)])
-
-# print("Optimal Fair:")
-# FairILP(alphas, betas, rankings, attributes_map, num_attributes)
-# print("------------------------")
-# print("Our algorithm + ILP:")
-# output_ranking = Consensus(alphas, betas, rankings, attributes_map, num_attributes)
-# print("------------------------")
-# print(output_ranking)
-
-# print("Our algorithm + KS:")
-
-# #This code is to set seed for kwiksort, to allow reproducibility
-# seed_val = 1
-# for alpha in alphas:
-#     seed_val *= alpha * 100
-
-# OurAlgo_KS(alphas, betas, rankings, attributes_map, num_attributes)
-# print("------------------------")
-# print("Best From Input algorithm")
-# BFI_Algo(alphas, betas, rankings, attributes_map, num_attributes)

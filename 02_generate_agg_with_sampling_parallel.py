@@ -20,6 +20,7 @@ from utils.fair_aggregation_methods import *
 from utils.borda_prefix_jr_ilp import * 
 from utils.io import load_rankings_to_df
 from utils.sampling_logic import generate_sample_sets, generate_sample_sets_stratified_by_bin
+from utils.kemeny_utils import * 
 
 # =============================================================================
 # Helper Functions
@@ -206,9 +207,11 @@ FAIR_METHODS = {
     "FairMedian": FairILP,
 }
 OUR_METHODS = {
-    'Our_Prefix_ILP': ilp_prefix_jr, 
-    'Our_Prefix_Fair_ILP': ilp_prefix_jr_plus_fair,
-    'Joe_Prefix_JR': prefix_JR_joe
+    'Our_Prefix_ILP_BORDA': ilp_prefix_jr, 
+    'Our_Prefix_Fair_ILP_BORDA': ilp_prefix_jr_plus_fair,
+    'Our_Prefix_ILP_KEMENY': ilp_prefix_jr, 
+    'Our_Prefix_Fair_ILP_KEMENY': ilp_prefix_jr_plus_fair,
+    'Greedy_Prefix_JR': prefix_JR_greedy
 }
 
 # =============================================================================
@@ -240,20 +243,27 @@ def _run_fair_method(method_name: str, alphas, betas, ranks_for_fairness, attrib
     except Exception as e:
         raise RuntimeError(f"[FAIR method {method_name}] failed from {e}")
 
-def _run_our_method(method_name: str, borda_ranking, approvals_by_k, n_voters,
+def _run_our_method(method_name: str, kemeny_ranking, borda_ranking, approvals_by_k, n_voters,
                     alphas, betas, k, fairness_k, attributes_map, num_attributes,
                     idx_to_item, rankings, all_items, user_key ):
     try:
         method = OUR_METHODS[method_name]
 
-        if method_name == "Our_Prefix_ILP":
+        if method_name == 'Our_Prefix_ILP_BORDA':
             result, obj = method(borda_ranking, approvals_by_k, n_voters)
             mapped_back = [idx_to_item[i] for i in result]
-        if method_name == 'Our_Prefix_Fair_ILP':
+        if method_name == 'Our_Prefix_Fair_ILP_BORDA':
             result, obj = method(borda_ranking, approvals_by_k, n_voters,
                                       alphas, betas, fairness_k, attributes_map, num_attributes)
             mapped_back = [idx_to_item[i] for i in result]
-        if method_name == 'Joe_Prefix_JR':
+        if method_name == 'Our_Prefix_ILP_KEMENY':
+            result, obj = method(kemeny_ranking, approvals_by_k, n_voters)
+            mapped_back = [idx_to_item[i] for i in result]
+        if method_name == 'Our_Prefix_Fair_ILP_KEMENY':
+            result, obj = method(kemeny_ranking, approvals_by_k, n_voters,
+                                      alphas, betas, fairness_k, attributes_map, num_attributes)
+            mapped_back = [idx_to_item[i] for i in result]
+        if method_name == 'Greedy_Prefix_JR':
             result = method(rankings, all_items, user_key)
             mapped_back = result
         return method_name, mapped_back
@@ -346,14 +356,20 @@ def main():
             'num_attributes': num_attributes}, open(os.path.join(write_dir, "fair_ranking_process.pkl"), 'wb')) 
         
         user_to_idx = dict(zip(sampled_rankings_dfs[seed][user_key].unique(), range(len(sampled_rankings_dfs[seed][user_key].unique()))))
-        
-        # Precompute inputs for OUR ILP Methods ---
-        borda_ranking = borda_count(ranks_for_fairness, list(range(len(idx_to_item))))
-        borda_ranking = [x for x, _ in borda_ranking]
-        n_voters = len(ranks_for_fairness)
         # invert idx_to_item (idx->item) to item->idx
         item_to_idx = {item: idx for idx, item in idx_to_item.items()}
         sampled_pref_df = sampled_rankings_dfs[seed].copy()
+        # Precompute inputs for OUR ILP Methods ---
+        borda_ranking = borda_count(ranks_for_fairness, list(range(len(idx_to_item))))
+        borda_ranking = [x for x, _ in borda_ranking]
+        
+        
+        kemeny_ranking, _, _, _ = kemeny_from_dataframe(sampled_rankings, ranked_items_col="Ranked_Items", restarts=50, seed=0)
+        kemeny_ranking = [item_to_idx[item] for item in kemeny_ranking]
+        
+        
+        n_voters = len(ranks_for_fairness)
+        
         # map user ids -> 0..n_voters-1
         sampled_pref_df[user_key] = sampled_pref_df[user_key].map(user_to_idx)
         approvals_by_k = {}
@@ -406,7 +422,7 @@ def main():
                     _safe_worker_call,
                     "OURS", name, _run_our_method,
                     name,
-                    borda_ranking, approvals_by_k, n_voters,
+                    borda_ranking, kemeny_ranking, approvals_by_k, n_voters,
                     alphas, betas, k, fairness_k, attributes_map, num_attributes,
                     idx_to_item, sampled_rankings_dfs[seed], sampled_items_seed, user_key
                 ))
