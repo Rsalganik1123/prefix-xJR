@@ -8,7 +8,7 @@ Please explicitly make sure that you have an ILP solver installed: ```pip instal
 # Datasets 
 
 ### MovieLens 
-You can access the dataset at \< placeholder for url\>. 
+You can access the dataset at https://grouplens.org/datasets/movielens/1m/ . 
 Please make sure it follows the file structure: 
 ```
 ml-1m/
@@ -17,7 +17,7 @@ ml-1m/
 ├── users.dat      # User demographic information
 ```
 ### Goodreads 
-You can access the full dataset a 
+You can access the full dataset at https://sites.google.com/eng.ucsd.edu/ucsdbookgraph/home. 
 Please note that, in order to make our empirical evaluations feasible, we significantly shrunk the dataset by randomly sampling user profiles and item indices. You can access our sub-sampled version of the dataset. Note: For the code used to sub-sample the dataset, please see: . 
 ```
 goodreads/
