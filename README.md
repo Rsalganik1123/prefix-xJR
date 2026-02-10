@@ -18,7 +18,7 @@ ml-1m/
 ```
 ### Goodreads 
 You can access the full dataset at https://sites.google.com/eng.ucsd.edu/ucsdbookgraph/home. 
-Please note that, in order to make our empirical evaluations feasible, we significantly shrunk the dataset by randomly sampling user profiles and item indices. You can access our sub-sampled version of the dataset. Note: For the code used to sub-sample the dataset, please see: . 
+Please note that, in order to make our empirical evaluations feasible, we significantly shrunk the dataset by randomly sampling user profiles and item indices. We explicitly share the exact subsampled version of our dataset in ```data/goodreads/goodreads_sample.csv```. Note: For the code used to sub-sample the dataset, please see: ```data/goodreads/subsampling_protocol.py```. 
 ```
 goodreads/
 ├── goodreads_sample.csv     # Interaction pandas  
