@@ -27,7 +27,7 @@ goodreads/
 Please note that for both datasets we provide ```*.yaml``` files that can be used to modify their internal keys and storage locations. Practitioners who wish to augment our results with an additional dataset should create a folder with their dataset and follow the ```*.yaml``` formatting structure to make their loads compatible with our pipeline. 
 
 # Experimental Pipeline 
-We provide the full experimental pipeline for reproducing our results on both datasets. Intuitively, we name the files such that they follow a lexiographic ordering (e.g. 01 -- data transformations, 02 -- rank aggregation, 03 -- evaluation, 04 -- result gathering). Please note that for efficiency we design parallelized versions of each algorithm. We find that the parallelization pipeline makes it challenging to debug the rank aggregation methods. So we additionally provide non-parallelized versions in the folder labelled ```debugging```.
+We provide the full experimental pipeline for reproducing our results on both datasets. Intuitively, we name the files such that they follow a lexiographic ordering (e.g. 01 -- data transformations, 02 -- rank aggregation, 03 -- evaluation, 04 -- result gathering). Please note that for efficiency we design parallelized versions of each algorithm. 
 
 For ease, we present a complete run script under ```run_parallel_exp.sh``` which can be used to launch our exact experimental pipeline. This should be launched using the following arguments: ```sh run_parallel_exp.sh --dataset ml-1m``` (or ```--dataset goodreads```).
 
